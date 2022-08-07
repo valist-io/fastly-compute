@@ -1,0 +1,9 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = ["Alec Wantoch"]
+description = "IPFS gateway"
+language = "javascript"
+manifest_version = 2
+name = "ipfs-gateway"
+service_id = "2c3GHpkuZv1iE37SGqWEOG"
