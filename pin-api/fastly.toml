@@ -1,0 +1,9 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = ["Alec Wantoch"]
+description = "IPFS Pinning"
+language = "javascript"
+manifest_version = 2
+name = "pin-api"
+service_id = "3RL47stA1CbKC9Ebt0VC1D"
