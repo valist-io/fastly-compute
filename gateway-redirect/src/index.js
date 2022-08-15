@@ -10,9 +10,9 @@ async function handleRequest(event) {
   try {
     const match = reqURL.pathname.match(CID_REGEX)[1];
     const cid = CID.parse(match);
-    const newURL = new URL(`https://${cid.toV1().toString()}.ipfs.gateway-new.valist.io${reqURL.pathname.replace(CID_REGEX, '')}`);
-    return new Response(null, { headers: new Headers({ location: newURL.toString() }), status: 302, url: newURL.toString() });
+    const newURL = new URL(`https://${cid.toV1().toString()}.ipfs.gateway.valist.io${reqURL.pathname.replace(CID_REGEX, '')}`);
+    return new Response(null, { headers: new Headers({ location: newURL.toString(), 'access-control-allow-origin': '*', }), status: 302, url: newURL.toString() });
   } catch (e) {
-    return new Response(`invalid cid :c ${reqURL.toString()}`);
+    return new Response(`invalid cid :c ${reqURL.toString()}`, { headers: new Headers({ 'access-control-allow-origin': '*', })});
   }
 }
