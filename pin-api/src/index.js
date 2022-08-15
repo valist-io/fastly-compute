@@ -1,5 +1,6 @@
 /// <reference types="@fastly/js-compute" />
-import aws from 'aws-sdk';
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomBytes } from 'crypto';
 
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
@@ -10,31 +11,31 @@ async function handleRequest(event) {
   }
 
   try {
-    const random = randomBytes(32).toString("hex");
-
     const keys = new Dictionary("keys");
 
-    const s3 = new aws.S3({
-      apiVersion: '2006-03-01',
-      accessKeyId: keys.get('access_key'),
-      secretAccessKey: keys.get('secret_access_key'),
+    const s3Client = new S3Client({
       endpoint: 'https://s3.filebase.com',
       region: 'us-east-1',
-      s3ForcePathStyle: true,
-      signatureVersion: 'v4',
-    });
-
-    const post = s3.createPresignedPost({
-      Bucket: 'valist-test',
-      Fields: {
-        key: random,
+      credentials: {
+        accessKeyId: keys.get('access_key'),
+        secretAccessKey: keys.get('secret_access_key')
       },
-      Expires: 60,
     });
 
-    return new Response(JSON.stringify(post), { headers: new Headers({ status: 200, 'content-type': 'application/json', 'access-control-allow-origin': '*', }) });
+    const random = randomBytes(32).toString("hex");
+
+    const bucketParams = {
+      Bucket: 'valist',
+      Key: random,
+    };
+
+    const command = new PutObjectCommand(bucketParams);
+    const signedUrl = await getSignedUrl(s3Client, command, {
+      expiresIn: 3600,
+    });
+
+    return new Response(signedUrl, { headers: new Headers({ status: 200, 'access-control-allow-origin': '*', }) });
   } catch (e) {
-    console.log(e)
-    return new Response(`error :c`, { headers: new Headers({ status: 500 }) });
+    return new Response(`error :c`, { headers: new Headers({ status: 500, 'access-control-allow-origin': '*', }) });
   }
 }
