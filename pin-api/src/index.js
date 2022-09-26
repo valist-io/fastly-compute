@@ -22,7 +22,7 @@ async function handleRequest(event) {
       },
     });
 
-    const random = randomBytes(32).toString("hex");
+    const random = `${randomBytes(32).toString("hex")}${new Date().getTime()}`;
 
     const bucketParams = {
       Bucket: 'valist',
