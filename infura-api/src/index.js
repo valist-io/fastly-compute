@@ -2,7 +2,7 @@
 
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
 
-const validPaths = new RegExp("^\/api\/v0\/(add|pin\/add)$");
+const validPaths = new RegExp("^\/api\/v0\/(add|pin\/add|pin\/ls)$");
 
 async function handleRequest(event) {
   let reqUrl = new URL(event.request.url);
